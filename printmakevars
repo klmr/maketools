@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+
+# Inspired by <http://blog.melski.net/2010/11/30/makefile-hacks-print-the-value-of-any-variable/>
+
+printenv_make=$(cat <<'MAKE'
+print-%:
+	@echo '$*=$($*)'
+	@echo '  origin = $(origin $*)'
+	@echo '  flavor = $(flavor $*)'
+	@echo '   value = $(value  $*)'
+MAKE
+)
+
+if [ "$1" == "-f" ]; then
+    shift
+    filename="$1"
+    shift
+else
+    filename=""
+    if [ -f GNUMakeFile ]; then
+        filename=GNUMakeFile
+    elif [ -f makefile ]; then
+        filename=makefile
+    elif [ -f Makefile ]; then
+        filename=Makefile;
+    fi
+
+    if [ ! -n "$filename" ]; then
+        echo >&2 "No makefile found"
+        exit 1
+    fi
+fi
+
+vars=()
+for var in "$@"; do
+    vars+=("print-$var")
+done
+
+make -f <(echo "$printenv_make") -f "$filename" "${vars[@]}"
