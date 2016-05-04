@@ -8,7 +8,8 @@ rules inside a Makefile:
 ## How does it work?
 
 Easy: simply copy everything starting at `.DEFAULT_GOAL := show-help` to the end
-of your own Makefile. Then document any rules by adding a single line starting
+of your own Makefile (or `include show-help-minified.make`, and copy that file
+into your project). Then document any rules by adding a single line starting
 with `## ` *immediately before the rule*. E.g.:
 
 ```make
