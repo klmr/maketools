@@ -10,6 +10,7 @@ usage() {
     echo >&2
     echo >&2 "Positional arguments:"
     echo >&2 "  variables...: one or more names of variables to print"
+    exit ${1-0}
 }
 
 printenv_make=$(cat <<'MAKE'
@@ -21,12 +22,26 @@ debugprint-%:
 MAKE
 )
 
-if [ "$1" == "-f" ]; then
-    shift
-    filename="$1"
-    shift
-else
-    filename=""
+while getopts "tf:h" arg; do
+    case "$arg" in
+        t)
+            printenv_make=$'debugprint-%:\n\t@echo '"'"'$($*)'"'"
+            ;;
+        f)
+            filename="$OPTARG"
+            ;;
+        h)
+            usage
+            ;;
+        *)
+            usage 1
+            ;;
+    esac
+done
+
+shift $(($OPTIND - 1))
+
+if [ ! -n "$filename" ]; then
     if [ -f GNUMakeFile ]; then
         filename=GNUMakeFile
     elif [ -f makefile ]; then
