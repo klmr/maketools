@@ -3,10 +3,11 @@
 # Inspired by <http://blog.melski.net/2010/11/30/makefile-hacks-print-the-value-of-any-variable/>
 
 usage() {
-    echo >&2 "Usage: $0 [-f makefile] variables..."
+    echo >&2 "Usage: $0 [-f makefile] [-t] variables..."
     echo >&2
     echo >&2 "Optional arguments:"
     echo >&2 "  -f makefile:  path to the makefile"
+    echo >&2 "  -t:           terse mode; print only variable values"
     echo >&2
     echo >&2 "Positional arguments:"
     echo >&2 "  variables...: one or more names of variables to print"
